@@ -1,6 +1,7 @@
 org.apache.kafka.controller.AclControlManagerTest:
 - testAddAndDelete
 - testCreateAclDeleteAcl
+- testCreateAclWithCidrHosts
 - testCreateDedupe
 - testDeleteDedupe
 - testDeleteExceedsMaxRecords
@@ -8,6 +9,9 @@ org.apache.kafka.controller.AclControlManagerTest:
 - testValidateAclWithBadPrincipal
 - testValidateAclWithEmptyPrincipal
 - testValidateFilter
+- testValidateHostPatternCidrNotSupported
+- testValidateHostPatternInvalid
+- testValidateHostPatternValid
 - testValidateNewAcl
 org.apache.kafka.controller.ActivationRecordsGeneratorTest:
 - testActivationMessageForEmptyLog
@@ -85,6 +89,9 @@ org.apache.kafka.controller.ClusterControlManagerTest:
 - testReplayBrokerRegistrationChangeRecord
 - testReplayRegisterBrokerRecord
 - testUnregister
+- testUnregisterController
+- testUnregisterControllerWithUnsupportedMetadataVersion
+- testUnregisterUnknownController
 org.apache.kafka.controller.ConfigurationControlManagerTest:
 - testCordonedLogDirsFeature
 - testElrUpgrade
@@ -324,6 +331,7 @@ org.apache.kafka.controller.ReplicationControlManagerTest:
 - testRemoveLeaderships
 - testShrinkAndExpandIsr
 - testTopicNameCollision
+- testTotalNumberOfPartitionsValidationDoesNotOverflow
 - testValidateBadManualPartitionAssignments
 - testValidateGoodManualPartitionAssignments
 - testValidateNewTopicNames
@@ -757,6 +765,7 @@ org.apache.kafka.metadata.MetadataCacheTest:
 - testGetPartitionReplicaEndpoints
 - testIsBrokerFenced
 - testIsBrokerInControlledShutdown
+- testToClusterIncludesFencedReplicasAsOffline
 org.apache.kafka.metadata.MetadataRecordSerdeTest:
 - testDeserializeWithUnhandledFrameVersion
 - testParsingMalformedFrameVersionVarint
@@ -839,11 +848,14 @@ org.apache.kafka.metadata.authorizer.StandardAuthorizerPropertyTest:
 - matchingPrefixAllowWithNoMatchingDenyRules
 - matchingPrefixDenyOverridesAllAllowRules
 org.apache.kafka.metadata.authorizer.StandardAuthorizerTest:
+- testAclWithCidrHost
+- testAclWithIpv6CidrHost
 - testAllowAuditLogging
 - testAllowEveryoneIfNoAclFoundConfigDisabled
 - testAllowEveryoneIfNoAclFoundConfigEnabled
 - testAuthorizationPriorToCompleteInitialLoad
 - testAuthorizationWithManyAcls
+- testAuthorizeByResourceTypeWithCidrHost
 - testAuthorizerMetrics
 - testCompleteInitialLoad
 - testCompleteInitialLoadWithException
@@ -856,6 +868,10 @@ org.apache.kafka.metadata.authorizer.StandardAuthorizerTest:
 - testGetDefaultResult
 - testHostAddressAclValidation
 - testListAcls
+- testOverlappingCidrAllowNarrowDenyWide
+- testOverlappingCidrDenyNarrowAllowWide
+- testOverlappingCidrSamePermissionBothAllow
+- testOverlappingCidrWithWildcardAllow
 - testPrefixAcls
 - testSimpleAuthorizations
 - testStartWithEarlyStartListeners
@@ -912,8 +928,6 @@ org.apache.kafka.metadata.storage.FormatterTest:
 - testFormatWithScram
 - testFormatWithScramFailsOnUnsupportedReleaseVersions
 - testFormatWithStaticQuorumFailsWithNewerKraftVersion
-- testFormatWithUnstableReleaseVersion
-- testFormatWithUnstableReleaseVersionFailsWithoutEnableUnstable
 - testFormatterFailsOnAlreadyFormatted
 - testFormatterFailsOnUnwritableDirectory
 - testFormattingCreatesLogDirId

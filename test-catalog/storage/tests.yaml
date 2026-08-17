@@ -27,6 +27,7 @@ org.apache.kafka.server.log.remote.metadata.storage.ConsumerTaskTest:
 - testAddAssignmentsForPartitions
 - testCanProcessRecord
 - testCanReprocessSkippedRecords
+- testCloseBeforeAssignmentDoesNotPollConsumer
 - testCloseOnNoAssignment
 - testConcurrentAccess
 - testConcurrentPartitionAssignments
@@ -76,6 +77,9 @@ org.apache.kafka.server.log.remote.metadata.storage.TopicBasedRemoteLogMetadataM
 - testCommonClientOverridesConfig
 - testCustomMinIsr
 - testDefaultMinIsr
+- testDeprecatedBrokerIdIsStillAccepted
+- testMissingNodeIdThrows
+- testNodeIdTakesPrecedenceOverDeprecatedBrokerId
 - testValidConfig
 - verifyToStringRedactsSensitiveConfigurations
 org.apache.kafka.server.log.remote.metadata.storage.TopicBasedRemoteLogMetadataManagerMultipleSubscriptionsTest:
@@ -229,6 +233,7 @@ org.apache.kafka.server.log.remote.storage.RemoteLogManagerTest:
 - testRetentionSizeInPercentMetricsTaskCancellation
 - testRetentionSizeInPercentMetricsWithNegativeRetention
 - testRetentionSizeInPercentMetricsWithZeroRetention
+- testSizeRetentionDoesNotOverDeleteOnFreshLeaderUntilHighestRemoteOffsetSeeded
 - testStopPartitionsWithDeletion
 - testStopPartitionsWithoutDeletion
 - testTierLagResetsToZeroOnBecomingFollower

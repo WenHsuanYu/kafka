@@ -281,6 +281,18 @@ kafka.api.GroupEndToEndAuthorizationTest:
 - testProduceConsumeWithPrefixedAcls
 - testProduceConsumeWithWildcardAcls
 - testTwoConsumersWithDifferentSaslCredentials
+kafka.api.IncrementalAllocationProducerSendTest:
+- testBatchSizeZero
+- testClose
+- testCloseWithZeroTimeoutFromCallerThread
+- testCloseWithZeroTimeoutFromSenderThread
+- testFlush
+- testSendBeforeAndAfterPartitionExpansion
+- testSendLargeRecordsSpanningMultipleChunks
+- testSendNonCompressedMessageWithCreateTime
+- testSendOffset
+- testSendToPartition
+- testSendToPartitionWithFollowerShutdownShouldNotTimeout
 kafka.api.MetricsTest:
 - testMetrics
 kafka.api.PlaintextAdminIntegrationTest:
@@ -318,7 +330,6 @@ kafka.api.PlaintextAdminIntegrationTest:
 - testDeleteTopicsWithOptionTimeoutMs
 - testDescribeAndAlterConfigs
 - testDescribeClassicGroups
-- testDescribeCluster
 - testDescribeConfigWithOptionTimeoutMs
 - testDescribeConfigsForLog4jLogLevels
 - testDescribeConfigsForTopic
@@ -326,16 +337,12 @@ kafka.api.PlaintextAdminIntegrationTest:
 - testDescribeConfigsNonexistentForKraft
 - testDescribeGroups
 - testDescribeLogDirs
-- testDescribeNonExistingTopic
 - testDescribeProducers
 - testDescribeReplicaLogDirs
 - testDescribeStreamsGroups
 - testDescribeStreamsGroupsForStatelessTopology
 - testDescribeStreamsGroupsNotReady
-- testDescribeTopicsWithIds
-- testDescribeTopicsWithNames
-- testDescribeTopicsWithOptionPartitionSizeLimitPerResponse
-- testDescribeTopicsWithOptionTimeoutMs
+- testDescribeStreamsGroupsWithTopologyDescription
 - testDescribeTransactions
 - testDescribeTransactionsTimeout
 - testDescribeUserScramCredentials
@@ -369,14 +376,10 @@ kafka.api.PlaintextAdminIntegrationTest:
 - testListConsumerGroupOffsets
 - testListConsumerGroups
 - testListGroups
-- testListNodes
-- testListNodesWithFencedBroker
 - testListReassignmentsDoesNotShowDeletedPartitions
 - testListReassignmentsDoesNotShowNonReassigningPartitions
 - testListShareGroupOffsets
 - testListStreamsGroupOffsets
-- testListTopicsWithOptionListInternal
-- testListTopicsWithOptionTimeoutMs
 - testListTransactions
 - testLogStartOffsetAfterDeleteRecords
 - testLogStartOffsetCheckpoint
@@ -830,36 +833,6 @@ kafka.coordinator.transaction.TransactionMarkerRequestCompletionHandlerTest:
 - shouldThrowIllegalStateExceptionWhenMessageTooLargeError
 - shouldThrowIllegalStateExceptionWhenRecordListTooLargeError
 - shouldThrowIllegalStateExceptionWhenUnknownError
-kafka.coordinator.transaction.TransactionMetadataTest:
-- testAllTransactionStatesAreMapped
-- testAttemptedEpochBumpWithFencedEpoch
-- testAttemptedEpochBumpWithLastEpoch
-- testAttemptedEpochBumpWithNewlyCreatedMetadata
-- testBumpEpochNotAllowedIfEpochsExhausted
-- testEpochBumpOnEndTxn
-- testEpochBumpOnEndTxnOverflow
-- testEpochBumpWithCurrentEpochProvided
-- testFenceProducerAfterEpochsExhausted
-- testFenceProducerNotAllowedIfItWouldOverflow
-- testInitializeEpoch
-- testInvalidTransitionFromCompleteAbortToFence
-- testInvalidTransitionFromCompleteCommitToFence
-- testNormalEpochBump
-- testRotateProducerId
-- testRotateProducerIdInOngoingState
-- testRotateProducerIdInPrepareAbortState
-- testRotateProducerIdInPrepareCommitState
-- testTolerateTimeShiftDuringAddPartitions
-- testTolerateTimeShiftDuringCompleteAbort
-- testTolerateTimeShiftDuringCompleteCommit
-- testTolerateTimeShiftDuringPrepareAbort
-- testTolerateTimeShiftDuringPrepareCommit
-- testTolerateUpdateTimeResetDuringProducerIdRotation
-- testTolerateUpdateTimeShiftDuringEpochBump
-- testTransactionStateIdAndNameMapping
-- testTransitFromCompleteAbortToPrepareAbortInV2
-- testTransitFromCompleteCommitToPrepareAbortInV2
-- testTransitFromEmptyToPrepareAbortInV2
 kafka.coordinator.transaction.TransactionStateManagerTest:
 - shouldNotRemoveExpiredTransactionalIdsIfLogAppendFails
 - shouldNotRemoveOngoingTransactionalIds
@@ -987,17 +960,6 @@ kafka.network.DynamicConnectionQuotaTest:
 - testDynamicListenerConnectionQuota
 kafka.network.DynamicNumNetworkThreadsTest:
 - testDynamicNumNetworkThreads
-kafka.network.ProcessorTest:
-- testParseRequestHeaderForProduceV0ToV2
-- testParseRequestHeaderWithDisabledApiVersion
-- testParseRequestHeaderWithUnsupportedApi
-- testParseRequestHeaderWithUnsupportedApiVersion
-kafka.network.RequestChannelTest:
-- testAlterRequests
-- testBuildEnvelopeResponse
-- testIncrementalAlterRequests
-- testJsonRequests
-- testNonAlterRequestsNotTransformed
 kafka.network.RequestConvertToJsonTest:
 - testRequestDesc
 - testRequestDescMetrics
@@ -1066,8 +1028,6 @@ kafka.raft.RaftManagerTest:
 - testLogDirLockWhenBrokerOnlyWithSeparateMetadataDir
 - testLogDirLockWhenControllerOnly
 - testNodeIdPresent
-kafka.security.minikdc.MiniKdcTest:
-- shouldNotStopImmediatelyWhenStarted
 kafka.server.AbstractFetcherManagerTest:
 - testAddAndRemovePartition
 - testDeadThreadCountMetric
@@ -1336,6 +1296,7 @@ kafka.server.ControllerApisTest:
 - testUnauthorizedHandleIncrementalAlterConfigs
 - testUnauthorizedHandleListPartitionReassignments
 - testUnauthorizedHandleUnregisterBroker
+- testUnauthorizedHandleUnregisterController
 - testUnauthorizedVote
 kafka.server.ControllerConfigurationValidatorTest:
 - testDefaultTopicResourceIsRejected
@@ -1372,6 +1333,8 @@ kafka.server.ControllerMutationQuotaTest:
 kafka.server.ControllerRegistrationManagerTest:
 - testCreateAndClose
 - testCreateStartAndClose
+- testReRegistrationAfterDifferentIncarnationId
+- testReRegistrationAfterUnregister
 - testRegistration
 - testRetransmitRegistration
 - testRetransmitRegistrationAfterTimeout
@@ -1435,6 +1398,7 @@ kafka.server.DynamicBrokerConfigTest:
 - testDynamicLogLocalRetentionSizeConfig
 - testDynamicLogLocalRetentionSkipsOnInvalidConfig
 - testDynamicLogLocalRetentionThrowsOnIncorrectConfig
+- testDynamicLogRemoteCopyLagConfig
 - testDynamicLogRemoteCopyLagThrowsOnIncorrectConfig
 - testDynamicRemoteFetchMaxWaitMsConfig
 - testDynamicRemoteListOffsetsRequestTimeoutMsConfig
@@ -1444,6 +1408,7 @@ kafka.server.DynamicBrokerConfigTest:
 - testImproperConfigsAreRemoved
 - testIsolatedControllerAuthorizerConfig
 - testLogRetentionTimeMinutesIsNotDynamicallyReconfigurable
+- testMetricReportersAreConfiguredWithBothIdConfigs
 - testReconfigurableValidation
 - testRemoteLogDynamicThreadPoolWithInvalidValues
 - testRemoteLogManagerCopyQuotaUpdates
@@ -1823,6 +1788,7 @@ kafka.server.KafkaConfigTest:
 - testAdvertiseDefaults
 - testAdvertisedListenersAllowedForKRaftControllerOnlyRole
 - testBadListenerProtocol
+- testBrokerIdDeprecationWarning
 - testBrokerIdIsInferredByNodeIdWithKraft
 - testCaseInsensitiveListenerProtocol
 - testConsumerGroupHeartbeatIntervalValidation
@@ -2053,8 +2019,6 @@ kafka.server.ReplicaAlterLogDirsThreadTest:
 - shouldTruncateToInitialFetchOffsetIfReplicaReturnsUndefinedOffset
 - shouldTruncateToReplicaOffset
 - shouldUpdateLeaderEpochAfterFencedEpochError
-kafka.server.ReplicaFetchTest:
-- testReplicaFetcherThread
 kafka.server.ReplicaFetcherThreadTest:
 - shouldCatchExceptionFromBlockingSendWhenShuttingDownReplicaFetcherThread
 - shouldHandleExceptionFromBlockingSend
@@ -2258,6 +2222,10 @@ kafka.server.StreamsGroupDescribeRequestTest:
 - testStreamsGroupDescribeGroupsWithNewGroupCoordinator
 - testStreamsGroupDescribeWhenFeatureFlagNotEnabled
 kafka.server.StreamsGroupHeartbeatRequestTest:
+- testAlterRackAwareAssignmentTagsGroupConfig
+- testAlterStreamsAssignorNameGroupConfig
+- testAlterStreamsAssignorNameGroupConfigWithCustomAssignor
+- testDescribeStreamsAssignorNameGroupConfigFallsBackToAssignorName
 - testDynamicGroupConfig
 - testEmptyStreamsGroupId
 - testFencedMemberCanRejoinWithEpochZero
@@ -2273,6 +2241,10 @@ kafka.server.StreamsGroupHeartbeatRequestTest:
 - testStreamsGroupHeartbeatIsInaccessibleWhenOffsetTopicNotExist
 - testStreamsGroupHeartbeatWithInvalidAPIVersion
 kafka.server.StreamsGroupHeartbeatRequestTest$WithAssignmentBatchingDisabledTest:
+- testAlterRackAwareAssignmentTagsGroupConfig
+- testAlterStreamsAssignorNameGroupConfig
+- testAlterStreamsAssignorNameGroupConfigWithCustomAssignor
+- testDescribeStreamsAssignorNameGroupConfigFallsBackToAssignorName
 - testDynamicGroupConfig
 - testEmptyStreamsGroupId
 - testFencedMemberCanRejoinWithEpochZero
@@ -2287,6 +2259,14 @@ kafka.server.StreamsGroupHeartbeatRequestTest$WithAssignmentBatchingDisabledTest
 - testStreamsGroupHeartbeatIsInaccessibleWhenDisabledByStaticGroupCoordinatorProtocolConfig
 - testStreamsGroupHeartbeatIsInaccessibleWhenOffsetTopicNotExist
 - testStreamsGroupHeartbeatWithInvalidAPIVersion
+kafka.server.StreamsGroupTopologyDescriptionNoPluginRequestTest:
+- testHeartbeatDoesNotSolicitPushAndDescribeReturnsNotStoredWhenNoPluginConfigured
+- testStreamsGroupTopologyDescriptionUpdateReturnsUnsupportedVersionWhenNoPluginConfigured
+kafka.server.StreamsGroupTopologyDescriptionRequestTest:
+- testDeleteGroupWithStoredTopologyDescription
+- testHeartbeatSolicitsPushAndDescribeReturnsStoredTopologyDescription
+- testStreamsGroupTopologyDescriptionUpdateValidationErrors
+- testStreamsGroupTopologyDescriptionUpdateWithInvalidApiVersion
 kafka.server.SyncGroupRequestTest:
 - testSyncGroupWithOldConsumerGroupProtocol
 kafka.server.TierStateMachineTest:
@@ -2357,13 +2337,6 @@ kafka.server.epoch.OffsetsForLeaderEpochTest:
 kafka.server.handlers.DescribeTopicPartitionsRequestHandlerTest:
 - testDescribeTopicPartitionsRequest
 - testDescribeTopicPartitionsRequestWithEdgeCases
-kafka.server.logger.RuntimeLoggerManagerTest:
-- testOperationNotAllowed
-- testValidateBogusLogLevelNameNotAllowed
-- testValidateDeleteLogLevelConfig
-- testValidateRemoveRootLogLevelConfigNotAllowed
-- testValidateSetLogLevelConfig
-- testValidateSetRootLogLevelConfig
 kafka.server.metadata.BrokerMetadataPublisherTest:
 - testExceptionInUpdateCoordinator
 - testGetTopicDelta
@@ -2375,7 +2348,12 @@ kafka.server.metadata.ClientQuotaMetadataManagerTest:
 - testHandleIpQuota
 - testTransferToClientQuotaEntity
 kafka.server.share.DelayedShareFetchTest:
+- testAsyncReadExceptionReleasesLocks
+- testAsyncReadMinBytesNotSatisfiedClearsAcquiredStateForOnComplete
+- testAsyncReadMinBytesNotSatisfiedClearsAcquiredStateForRetry
+- testAsyncReadRemoteFetchRemovesNonRemotePartitionsFromAcquiredOnRelease
 - testCombineLogReadResponse
+- testCompleteShareFetchAsyncRequestReleasesLocksWhenExceptionHandlingThrows
 - testDelayedShareFetchTryCompleteReturnsFalseDueToNonAcquirablePartitions
 - testDelayedShareFetchTryCompleteReturnsTrue
 - testEmptyFutureReturnedByDelayedShareFetchOnComplete
@@ -2385,13 +2363,18 @@ kafka.server.share.DelayedShareFetchTest:
 - testLocksReleasedAcquireException
 - testLocksReleasedForCompletedFetch
 - testOnCompleteExecutionOnTimeout
+- testOnCompleteWithCompletedAsyncFetch
+- testOnCompleteWithPendingAsyncFetch
 - testPartitionMaxBytesFromUniformStrategyInCombineLogReadResponse
 - testPartitionMaxBytesFromUniformStrategyWhenAllPartitionsAreAcquirable
 - testPartitionMaxBytesFromUniformStrategyWhenFewPartitionsAreAcquirable
+- testRemoteStorageFetchCompletionDoesNotDuplicateLocalPartitionsInActionQueue
 - testRemoteStorageFetchCompletionNotTriggerActionsQueue
 - testRemoteStorageFetchCompletionPostRegisteringCallbackByPendingFetchesCompletion
 - testRemoteStorageFetchCompletionPostRegisteringCallbackByTimerTaskCompletion
 - testRemoteStorageFetchHappensForAllTopicPartitions
+- testRemoteStorageFetchLocalReadCompletionFailureReleasesLocks
+- testRemoteStorageFetchLocalReadFailureReleasesLocks
 - testRemoteStorageFetchPartitionLeaderChanged
 - testRemoteStorageFetchRequestCompletionAlongWithLocalLogRead
 - testRemoteStorageFetchRequestCompletionOnFutureCompletionFailure
@@ -2401,14 +2384,38 @@ kafka.server.share.DelayedShareFetchTest:
 - testRemoteStorageFetchTryCompletionDueToBrokerBecomingOffline
 - testReplicaManagerFetchShouldHappenOnComplete
 - testToCompleteAnAlreadyCompletedFuture
+- testTryCompleteAsyncCompletion
 - testTryCompleteLocksReleasedOnCompleteException
+- testTryCompleteReleasesLocksWhenAsyncReadImmediatelyThrows
 - testTryCompleteWhenMinBytesNotSatisfiedOnFirstFetch
 - testTryCompleteWhenMinBytesNotSatisfiedOnSubsequentFetch
 - testTryCompleteWhenPartitionMaxBytesStrategyThrowsException
+- testTryCompleteWithPendingRemoteFetchInFlight
+kafka.server.share.ReplicaManagerLogReaderTest:
+- testReadAsyncCompletesExceptionallyWhenLocalReadThrows
+- testReadAsyncFollowsRemoteWhenTieredAndReadRemoteTrue
+- testReadAsyncResolvesPartitionsIndependently
+- testReadAsyncReturnsEmptyWhenNoPartitionsToFetch
+- testReadAsyncReturnsErrorFromLocalRead
+- testReadAsyncReturnsLocalDataWhenNotTiered
+- testReadAsyncReturnsNoneErrorWhenRemoteReadFailsButLocalSucceeds
+- testReadAsyncSkipsRemoteWhenReadRemoteFalse
+- testReadRemoteCompletesExceptionallyWhenReadResultHasError
+- testReadRemoteCompletesExceptionallyWhenReadResultIsEmpty
+- testReadRemoteCompletesExceptionallyWhenRemoteLogManagerNotConfigured
+- testReadRemoteCompletesExceptionallyWhenSchedulingRejected
+- testReadRemoteCompletesWithFetchedData
+- testReadRemoteTimesOutWhenRemoteReadNeverCompletes
+- testReadReturnsEmptyWhenNoPartitionsToFetch
+- testReadReturnsResultsFromReplicaManager
 kafka.server.share.ShareCoordinatorMetadataCacheHelperImplTest:
 - testConstructorThrowsErrorOnNullArgs
 - testContainsTopicReturnsFalseOnException
 - testContainsTopicSuccess
+- testDlqTopicMaxMessageBytesFallsBackToBrokerConfigOnInvalidTopicOverride
+- testDlqTopicMaxMessageBytesFallsBackToBrokerConfigWhenNoTopicOverride
+- testDlqTopicMaxMessageBytesFallsBackToBrokerConfigWhenTopicConfigNull
+- testDlqTopicMaxMessageBytesUsesTopicOverrideWhenPresent
 - testGetClusterNodesEmptyListOnException
 - testGetClusterNodesSuccess
 - testIsDlqAutoTopicCreateEnabledReturnsFalse
@@ -2730,6 +2737,7 @@ kafka.server.share.SharePartitionTest:
 - testMaybeInitializeWhenReadStateRpcReturnsZeroAvailableRecords
 - testMaybeInitializeWithEmptyStateBatches
 - testMaybeInitializeWithEmptyTopicsData
+- testMaybeInitializeWithEqualButDistinctTopicIdResponse
 - testMaybeInitializeWithErrorPartitionResponse
 - testMaybeInitializeWithInvalidOffsetInBatch
 - testMaybeInitializeWithInvalidPartitionResponse
@@ -2794,6 +2802,7 @@ kafka.server.share.SharePartitionTest:
 - testThrottleRecordsWhenPendingDeliveriesExist
 - testWriteShareGroupState
 - testWriteShareGroupStateFailure
+- testWriteShareGroupStateWithEqualButDistinctTopicIdResponse
 - testWriteShareGroupStateWithInvalidTopicsData
 - testWriteShareGroupStateWithNoOpStatePersister
 - testWriteShareGroupStateWithNullResponse

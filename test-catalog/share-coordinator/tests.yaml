@@ -47,6 +47,7 @@ org.apache.kafka.coordinator.share.ShareCoordinatorServiceTest:
 - testOnMetadataUpdateSchedulesOperationsWhenTopicsDeleted
 - testOnMetadataUpdateSwallowsErrorsWhenTopicsDeleted
 - testPartitionFor
+- testPeriodicJobsDoNotDuplicateAfterDisableEnableWithInFlightJobs
 - testPeriodicJobsDoNotRunWhenShareGroupsDisabled
 - testReadFutureReturnsError
 - testReadStateSuccess
@@ -106,6 +107,10 @@ org.apache.kafka.coordinator.share.ShareCoordinatorShardTest:
 - testSubsequentWriteStateSnapshotEpochUpdatesSuccessfully
 - testWriteFailsOnUninitializedPartition
 - testWriteNullMetadataImage
+- testWriteStateDiscardsDeliveryCompleteCountRegressionIncomingStartOffsetEqual
+- testWriteStateDiscardsDeliveryCompleteCountRegressionIncomingStartOffsetGreater
+- testWriteStateDiscardsDeliveryCompleteCountRegressionIncomingStartOffsetSmaller
+- testWriteStateDiscardsStartOffsetRegression
 - testWriteStateFencedLeaderEpochError
 - testWriteStateFencedStateEpochError
 - testWriteStateInvalidLeaderEpochRequestData
